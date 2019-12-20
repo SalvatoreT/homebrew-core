@@ -26,16 +26,7 @@ class Gnirehtet < Formula
     system "cargo", "install", "--locked", "--root", libexec, "--path", "relay-rust"
     mv "#{libexec}/bin/gnirehtet", "#{libexec}/gnirehtet"
 
-    (bin/"gnirehtet").write <<~EOS
-      #!/bin/bash
-      if [[ "$1" == "install" ]]; then
-        shift
-        echo "Installing #{libexec}/gnirehtet.apk"
-        adb install -r #{libexec}/gnirehtet.apk
-      else
-        #{libexec}/gnirehtet $*
-      fi
-    EOS
+    (bin/"gnirehtet").write_env_script("#{libexec}/gnirehtet", :GNIREHTET_APK => "#{libexec}/gnirehtet.apk")
   end
 
   def caveats; <<~EOS
