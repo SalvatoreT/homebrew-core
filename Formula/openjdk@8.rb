@@ -25,7 +25,6 @@ class OpenjdkAT8 < Formula
 
   depends_on "autoconf" => :build
   depends_on "pkg-config" => :build
-  depends_on arch: :x86_64
   depends_on "freetype"
   depends_on "giflib"
 
@@ -141,6 +140,12 @@ class OpenjdkAT8 < Formula
       ldflags << "-Wl,-rpath,#{extra_rpath.gsub("$", "\\$$$$")}"
     end
     args << "--with-extra-ldflags=#{ldflags.join(" ")}"
+
+    on_macos do
+      on_arm do
+        args << '--openjdk-target=aarch64-apple-darwin'
+      end
+    end
 
     system "bash", "common/autoconf/autogen.sh"
     system "bash", "configure", *args
