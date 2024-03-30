@@ -16,10 +16,6 @@ class Veilid < Formula
     sha256 cellar: :any_skip_relocation, x86_64_linux:   "f6c2ae1ca0b9a5d2afd2d7cf726a954cea96ad19f03f59d1c623faedcb36523d"
   end
 
-  # TODO: Remove `capnp` dependency once version >v0.2.5
-  depends_on "capnp" => :build
-  # TODO: Remove `protobuf` dependency once version >v0.2.5
-  depends_on "protobuf" => :build
   depends_on "rust" => :build
 
   def install
@@ -29,7 +25,7 @@ class Veilid < Formula
 
   test do
     require "yaml"
-    server_config = YAML.load(shell_output(bin/"veilid-server --dump-config"))
+    server_config = YAML.load(shell_output(bin/"veilid-server --set-config client_api.ipc_enabled=false --dump-config"))
     assert_match "server.crt", server_config["core"]["network"]["tls"]["certificate_path"]
     assert_match "Invalid server address", shell_output(bin/"veilid-cli --address FOO 2>&1", 1)
   end
